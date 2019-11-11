@@ -1,0 +1,42 @@
+---
+title: "MCMC tutorial"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MCMC tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r dist, fig.width = 6, fig.height = 6}
+require(mc2)
+require(ggplot2)
+t <- seq(-6, 10, by=0.5)
+r <- 0.03
+log_prob <- function(x){banana(x, r)}
+z_fun <- function(t1,t2){banana(cbind(t1,t2), r)}
+#x1 <- outer(t, t, function(t){t})
+z <- outer(t, t, z_fun)
+contour(t,t,z)
+```
+
+```{r demo, fig.width = 6, fig.height = 6}
+iter <- 5000
+x0   <- c(5,3)
+sig  <- 0.25
+x    <- metropolis(log_prob, x0, iter, sig)
+
+df <- data.frame(x[,1], x[,2], 1:iter)
+colnames(df) <- c("x1", "x2", "iter")
+plt <- ggplot(df, aes(x = x1, y = x2)) + geom_point(color = "firebrick3", alpha = 0.1) +
+       geom_line(color = "firebrick3", alpha = 0.1) + xlim(-6,10) + ylim(-6,10) +
+  theme_bw() + ggtitle('Samples')
+plt
+```

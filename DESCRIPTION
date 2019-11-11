@@ -1,6 +1,6 @@
 Package: mc2
 Title: Markov Chain Monte Carlo Samplers
-Version: 0.0.0.9000
+Version: 0.0.0.9001
 Authors@R: 
     person(given = "Juho",
            family = "Timonen",
@@ -15,4 +15,9 @@ RoxygenNote: 6.1.1
 LinkingTo: 
     Rcpp
 Imports: 
-    Rcpp
+    Rcpp,
+    ggplot2 (>= 3.2.1),
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

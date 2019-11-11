@@ -18,7 +18,7 @@ a value that is proportional to the log probability density at \code{x}}
 draws a proposal \code{x_prop}}
 }
 \value{
-a numeric vector of length \code{iter}
+a matrix of size \code{iter} x \code{length(x0)}
 }
 \description{
 Run one metropolis chain
