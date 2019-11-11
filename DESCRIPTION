@@ -1,0 +1,18 @@
+Package: mc2
+Title: Markov Chain Monte Carlo Samplers
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Juho",
+           family = "Timonen",
+           role = c("aut", "cre"),
+           email = "juho.timonen@aalto.fi",
+           comment = c(ORCID = "0000-0003-2341-6765"))
+Description: Implements various Markov Chain Monte Carlo samplers.
+License: GPL(>=3)
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
+LinkingTo: 
+    Rcpp
+Imports: 
+    Rcpp
