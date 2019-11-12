@@ -4,7 +4,7 @@
 \alias{run.chain.metropolis}
 \title{Run one metropolis chain}
 \usage{
-run.chain.metropolis(log_prob, x0, iter, proposal_dist)
+run.chain.metropolis(log_prob, x0, iter, draw_prop)
 }
 \arguments{
 \item{log_prob}{a function that takes input \code{x} and returns
@@ -14,11 +14,11 @@ a value that is proportional to the log probability density at \code{x}}
 
 \item{iter}{number of iterations}
 
-\item{proposal_dist}{a function that takes input \code{x} and
+\item{draw_prop}{a function that takes input \code{x} and
 draws a proposal \code{x_prop}}
 }
 \value{
-a matrix of size \code{iter} x \code{length(x0)}
+a \code{list(path, prop, lp, accept)}
 }
 \description{
 Run one metropolis chain

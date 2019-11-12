@@ -2,7 +2,7 @@
 % Please edit documentation in R/example_distributions.R
 \name{banana}
 \alias{banana}
-\title{Log density of the banana distiribution}
+\title{Log density of the banana distiribution (2d)}
 \usage{
 banana(x, r = 0.05)
 }
@@ -15,5 +15,5 @@ banana(x, r = 0.05)
 log density at \code{x}
 }
 \description{
-Log density of the banana distiribution
+Log density of the banana distiribution (2d)
 }
