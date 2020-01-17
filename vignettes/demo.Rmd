@@ -1,5 +1,5 @@
 ---
-title: "MCMC tutorial"
+title: "MCMC demo"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{MCMC tutorial}
@@ -29,19 +29,16 @@ log_prob(c(2,3))
 First we sample using the Metropolis algoritm.
 ```{r metropolis, fig.width = 6, fig.height = 6}
 # Sample
-iter  <- 3000
+iter  <- 1000
 x0    <- stats::rnorm(2)
 sig   <- 0.1
 chain <- metropolis(log_prob, x0, iter, sig)
-X     <- chain$x
-x     <- X[,1]
-y     <- X[,2]
 ```
 
 ```{r plot, fig.width = 7.2, fig.height = 6}
 # Plot
-p <- plot_distribution(donut)
-df_path <- data.frame(x,y)
-p <- p + geom_path(data=df_path, mapping=aes(x=x,y=y), inherit.aes = FALSE, color = "firebrick3", alpha = 0.7)
+title <- paste0('Metropolis, sig = ', sig, ', iter = ', iter)
+p <- plt.surface(donut, title = title)
+p <- add.path(p, chain$x, lines = TRUE)
 p
 ```
