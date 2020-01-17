@@ -17,28 +17,31 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 require(mc2)
-set.seed(123)
+require(ggplot2)
 ```
 
 We begin by defining a target log posterior density and a grid for plotting.
 ```{r grid, fig.width = 6, fig.height = 6}
-t        <- seq(-5, 5, by=0.1)
-log_prob <- function(x){peaks(x)}
-z_fun    <- function(t1,t2){peaks(cbind(t1,t2))}
-z        <- outer(t, t, z_fun)
+log_prob <- function(x){donut(x)}
+log_prob(c(2,3))
 ```
 
 First we sample using the Metropolis algoritm.
 ```{r metropolis, fig.width = 6, fig.height = 6}
 # Sample
-iter  <- 5000
+iter  <- 3000
 x0    <- stats::rnorm(2)
-sig   <- 0.5
+sig   <- 0.1
 chain <- metropolis(log_prob, x0, iter, sig)
-x     <- chain$x
+X     <- chain$x
+x     <- X[,1]
+y     <- X[,2]
+```
 
+```{r plot, fig.width = 7.2, fig.height = 6}
 # Plot
-contour(t,t,z, main = paste(iter, 'samples'), xlim=c(-5,5), ylim=c(-5,5))
-points(x[,1], x[,2], pch = 20, col = "firebrick")
-#legend('topright', legend=c('log posterior', 'MCMC samples'))
+p <- plot_distribution(donut)
+df_path <- data.frame(x,y)
+p <- p + geom_path(data=df_path, mapping=aes(x=x,y=y), inherit.aes = FALSE, color = "firebrick3", alpha = 0.7)
+p
 ```

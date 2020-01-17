@@ -1,39 +1,49 @@
-#' Log density of the banana distiribution (2d)
+#' Unnormalized log density of a donut disribution
 #'
 #' @export
 #' @param x a point
-#' @param r a shape parameter
-#' @return log density at \code{x}
-banana <- function(x, r = 0.05) {
-  if(length(dim(x))==0){
-    x <- t(as.matrix(x))
+#' @return unnormalized log density at \code{x}
+donut <- function(x) {
+  if(is.null(dim(x))){
+    x  <- t(as.matrix(x))
   }
   x1 <- x[,1]
   x2 <- x[,2]
-  logp <- -x1^2/200 - 1/2*(x2 + r*x1^2 - 100*r)^2
+  r  <- sqrt(x1^2 + x2^2)
+  logp <- -(r-2)^2
   return(logp)
 }
 
-
-#' Log density of a mixture of three Gaussians (2d)
+#' Create contour plot of a density
 #'
 #' @export
-#' @param x a point
-#' @param m1 mean vector of component 1
-#' @param m2 mean vector of component 2
-#' @param m3 mean vector of component 3
-#' @param S1 covariance matrix of component 1
-#' @param S2 covariance matrix of component 2
-#' @param S3 covariance matrix of component 3
-#' @return log density at \code{x}
-peaks <- function(x, m1 = c(-2,2), m2 = c(0,-2),  m3 = c(2,2),
-                     S1 = diag(2), S2 = diag(2), S3 = diag(2)) {
-  if(length(dim(x))==0){
-    x <- t(as.matrix(x))
+#' @param fun function that evaluates (unnormalized) log density
+#' @param grid grid bouds
+#' @param N_grid number of grid points
+#' @return plot of the density
+plot_distribution <- function(fun = donut, grid = c(-4,-4,4,4), N_grid = 100){
+  xx <- seq(grid[1], grid[3], length.out = N_grid)
+  yy <- seq(grid[2], grid[4], length.out = N_grid)
+  n1 <- length(xx)
+  n2 <- length(yy)
+  df <- matrix(0, n1*n2, 3)
+  for(i in 1:n1){
+    x <- xx[i]
+    for(j in 1:n2){
+      y <- yy[j]
+      X <- t(as.matrix(c(x,y)))
+      z <- fun(X)
+      r <- (i-1)*n2 + j
+      df[r,1] <- x
+      df[r,2] <- y
+      df[r,3] <- z
+    }
   }
-  m1 <- mvtnorm::dmvnorm(x, mean = m1, sigma = S1, log = TRUE)
-  m2 <- mvtnorm::dmvnorm(x, mean = m2, sigma = S2, log = TRUE)
-  m3 <- mvtnorm::dmvnorm(x, mean = m3, sigma = S3, log = TRUE)
-  logp <- log(exp(m1) + exp(m2) + exp(m3)) # not the best logsumexp
-  return(logp)
+  df <- data.frame(df)
+  colnames(df) <- c("x", "y", "z")
+  df$z <- exp(df$z)
+  df$z <- df$z/sum(df$z)
+  p <- ggplot2::ggplot(df, ggplot2::aes(x=x,y=y)) + ggplot2::geom_raster(ggplot2::aes(fill=z)) +
+    ggplot2::theme_minimal() + ggplot2::scale_fill_viridis_c()
+  return(p)
 }

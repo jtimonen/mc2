@@ -16,10 +16,7 @@ metropolis <- function(log_prob,
     stop('log_prob must be a function!')
   }
   draw_prop <- function(x){
-    x_prop <- rep(0, length(x))
-    for(j in 1:length(x)){
-      x_prop[j] <- stats::rnorm(n = 1, mean = x[j], sd = sigma_prop)
-    }
+    x_prop <- x + stats::rnorm(n = length(x), mean = 0, sd = sigma_prop)
     return(x_prop)
   }
   out <- run.chain.metropolis(log_prob, x0, iter, draw_prop)
