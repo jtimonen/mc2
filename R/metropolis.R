@@ -19,8 +19,10 @@ metropolis <- function(log_prob,
     x_prop <- x + stats::rnorm(n = length(x), mean = 0, sd = sigma_prop)
     return(x_prop)
   }
-  out <- metropolis.run(log_prob, x0, iter, draw.prop)
-  return(out)
+  run <- metropolis.run(log_prob, x0, iter, draw.prop)
+  run$arate <- acceptance_rate(run$accept)
+  print.info(run)
+  return(run)
 
 }
 
@@ -48,10 +50,10 @@ metropolis.run <- function(log_prob, x0, iter, draw.prop){
   for(i in 2:iter){
     x        <- PATH[i-1,]
     lp       <- LP[i-1]
-    x_prop   <- draw.prop(x)
+    x_prop   <- draw.prop(x) # draw proposal
     PROP[i,] <- x_prop
-    lp_prop  <- log_prob(x_prop)
-    ratio    <- exp(lp_prop - lp)
+    lp_prop  <- log_prob(x_prop) # compute log prob of proposal
+    ratio    <- exp(lp_prop - lp) # compute acceptance ratio
     if(R[i]  < ratio){
       PATH[i,]  <- x_prop
       ACCEPT[i] <- 1
@@ -61,6 +63,7 @@ metropolis.run <- function(log_prob, x0, iter, draw.prop){
     }
     LP[i] <- log_prob(PATH[i,])
   }
+
   ret <- list(x = PATH, x_prop = PROP, lp = LP, accept = ACCEPT)
   return(ret)
 }

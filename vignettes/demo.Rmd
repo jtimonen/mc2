@@ -27,15 +27,17 @@ require(ggplot2)
 require(ggpubr)
 ```
 
-We begin by defining a target log posterior density and a grid for plotting.
+## Target distribution
+We begin by defining a target log posterior density.
 ```{r grid, fig.width = 6, fig.height = 6}
 log_prob <- function(x){donut(x)}
 log_prob(c(2,3))
 ```
 
+## Metropolis algorithm
 First we sample using the Metropolis algoritm.
 ```{r metropolis, fig.width = 7.2, fig.height = 2.8}
-SIG   <- c(0.1,0.25,0.5)
+SIG   <- c(0.1,0.5,1.0)
 ITER  <- rep(1000, 3)
 PLT   <- list()
 for(j in 1:3){
@@ -48,5 +50,5 @@ for(j in 1:3){
   PLT[[j]] <- add.path(p, chain$x, lines = FALSE, alpha = 0.3)
 }
 
-ggarrange(PLT[[1]], PLT[[2]], PLT[[3]], nrow = 1, ncol = 3)
+ggarrange(plotlist = PLT, nrow = 1, ncol = 3)
 ```
