@@ -1,10 +1,7 @@
 #' Metropolis sampling
 #'
 #' @export
-#' @param log_prob a function that takes input \code{x} and returns
-#' a value that is proportional to the log probability density at \code{x}
-#' @param x0 initial value
-#' @param iter number of iterations
+#' @inheritParams metropolis.run
 #' @param sigma_prop std of Gaussian proposal distribution
 #' @return a list
 metropolis <- function(log_prob,

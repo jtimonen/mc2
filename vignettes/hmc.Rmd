@@ -1,0 +1,71 @@
+---
+title: "Hamiltonian Monte Carlo"
+author: "Juho Timonen"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+#  pdf_document:
+#    toc: true     
+vignette: >
+  %\VignetteIndexEntry{Hamiltonian Monte Carlo}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+collapse = TRUE,
+comment = "#>"
+)
+```
+
+
+```{r setup}
+#devtools::install_github('jtimonen/mc2')
+require(mc2)
+require(ggplot2)
+require(ggpubr)
+```
+
+## Target distribution
+We use the 2D donut distribution
+$$
+p(\theta) = \mathcal{N}(r_{\theta}-R,\ \sigma^2) \hspace{1cm} r_{\theta} = \sqrt{\theta_1^2 + \theta_2^2}, \hspace{1cm} R,\ \sigma > 0
+$$
+as a running example of a target distribution. Its density is
+$$
+p(\theta) = \frac{1}{\sqrt{2 \pi \sigma^2}} \exp\left(-\frac{(r_{\theta}-R)^2}{2 \sigma^2} \right),
+$$
+and it looks like this
+
+```{r grid, fig.width = 4, fig.height = 3.2, echo = FALSE}
+log_prob <- function(x){donut(x)}
+plt.surface(donut, title = "Target density (R = 2, sigma = 0.3)") + 
+  theme(legend.position = "right", 
+        axis.text = element_text(size = 10),
+        axis.ticks = element_line())
+```
+
+## Hamiltonian dynamics
+
+We define potential energy
+$$
+U(\theta) = -\log p(\theta) = \frac{1}{2} \log(2\pi) + \log(\sigma) + \frac{(r_{\theta}-R)^2}{2 \sigma^2},
+$$
+momentum $\nu$ and mass $m$ (constant). Kinetic energy is defined as
+
+$$
+K(\nu) = \frac{\|\nu\|^2}{2m} = \frac{\nu_1^2 + \nu_2^2}{2m}
+$$
+and our Hamiltonian of the system is $H(\theta, \nu) = U(\theta) + K(\nu)$. Hamilton's equations are
+
+$$
+\begin{align*}
+\frac{d \theta_i}{dt} &=  \frac{\partial H}{\partial \nu_i} =  \frac{v_i}{m}\\
+\frac{d \nu_i}{dt} &= - \frac{\partial H}{\partial \theta_i} = \frac{2 \theta_i}{\sigma^2}\left(\frac{R}{r_{\theta}} - 1 \right)
+\end{align*}
+$$
+
+for both $i = 1,2$.
+

@@ -3,6 +3,5 @@
 S3method(print,info)
 export(add.path)
 export(donut)
-export(hmc)
 export(metropolis)
 export(plt.surface)

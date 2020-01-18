@@ -1,15 +1,12 @@
 #' Hamiltonian Monte Carlo (HMC) sampling
 #'
-#' @export
-#' @param log_prob a function that takes input \code{x} and returns
-#' a value that is proportional to the log probability density at \code{x}
-#' @param x0 initial value
-#' @param iter number of iterations
+#' @inheritParams hmc.run
 #' @return a list
 hmc <- function(log_prob,
+                hamiltonian,
                 x0 = c(0,0),
                 iter = 100,
-                sigma_prop = 1){
+                step_size = 0.1){
 
   if(!is.function(log_prob)){
     stop('log_prob must be a function!')
@@ -23,12 +20,15 @@ hmc <- function(log_prob,
 
 #' Run one HMC chain
 #'
-#' @param log_prob a function that takes input \code{x} and returns
-#' a value that is proportional to the log probability density at \code{x}
+#' @param log_prob a function that takes input \code{theta} and returns
+#' a value that is proportional to the log probability density at \code{theta}
+#' @param hamiltonian a function that takes as input the location and momentum
+#' and returns their time derivatives
 #' @param x0 initial value
 #' @param iter number of iterations
+#' @param step_size leapfrog step size
 #' @return a list
-hmc.run <- function(log_prob, x0, iter){
+hmc.run <- function(log_prob, hamiltonian, x0, iter, step_size){
   d        <- length(x0)
   PATH     <- matrix(0, iter, d)
   PATH[1,] <- x0

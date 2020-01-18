@@ -4,15 +4,20 @@
 \alias{hmc}
 \title{Hamiltonian Monte Carlo (HMC) sampling}
 \usage{
-hmc(log_prob, x0 = c(0, 0), iter = 100, sigma_prop = 1)
+hmc(log_prob, hamiltonian, x0 = c(0, 0), iter = 100, step_size = 0.1)
 }
 \arguments{
-\item{log_prob}{a function that takes input \code{x} and returns
-a value that is proportional to the log probability density at \code{x}}
+\item{log_prob}{a function that takes input \code{theta} and returns
+a value that is proportional to the log probability density at \code{theta}}
+
+\item{hamiltonian}{a function that takes as input the location and momentum
+and returns their time derivatives}
 
 \item{x0}{initial value}
 
 \item{iter}{number of iterations}
+
+\item{step_size}{leapfrog step size}
 }
 \value{
 a list

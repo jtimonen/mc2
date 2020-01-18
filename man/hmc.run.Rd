@@ -4,15 +4,20 @@
 \alias{hmc.run}
 \title{Run one HMC chain}
 \usage{
-hmc.run(log_prob, x0, iter)
+hmc.run(log_prob, hamiltonian, x0, iter, step_size)
 }
 \arguments{
-\item{log_prob}{a function that takes input \code{x} and returns
-a value that is proportional to the log probability density at \code{x}}
+\item{log_prob}{a function that takes input \code{theta} and returns
+a value that is proportional to the log probability density at \code{theta}}
+
+\item{hamiltonian}{a function that takes as input the location and momentum
+and returns their time derivatives}
 
 \item{x0}{initial value}
 
 \item{iter}{number of iterations}
+
+\item{step_size}{leapfrog step size}
 }
 \value{
 a list
