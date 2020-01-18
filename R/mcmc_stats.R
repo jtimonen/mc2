@@ -1,3 +1,14 @@
+#' Things to do after running a sampler
+#'
+#' @param chain a list
+#' @return an updated version of \code{chain}
+postproc <- function(chain){
+  chain$arate <- acceptance_rate(chain$accept)
+  print.info(chain)
+  return(chain)
+}
+
+
 #' Print MCMC chain info
 #'
 #' @export

@@ -18,7 +18,7 @@ a value that is proportional to the log probability density at \code{x}}
 draws a proposal \code{x_prop}}
 }
 \value{
-a \code{list(path, prop, lp, accept)}
+a list
 }
 \description{
 Run one metropolis chain

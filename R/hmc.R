@@ -1,41 +1,34 @@
-#' Metropolis sampling
+#' Hamiltonian Monte Carlo (HMC) sampling
 #'
 #' @export
 #' @param log_prob a function that takes input \code{x} and returns
 #' a value that is proportional to the log probability density at \code{x}
 #' @param x0 initial value
 #' @param iter number of iterations
-#' @param sigma_prop std of Gaussian proposal distribution
 #' @return a list
-metropolis <- function(log_prob,
-                       x0 = c(0,0),
-                       iter = 100,
-                       sigma_prop = 1){
+hmc <- function(log_prob,
+                x0 = c(0,0),
+                iter = 100,
+                sigma_prop = 1){
 
   if(!is.function(log_prob)){
     stop('log_prob must be a function!')
   }
-  draw.prop <- function(x){
-    x_prop <- x + stats::rnorm(n = length(x), mean = 0, sd = sigma_prop)
-    return(x_prop)
-  }
-  run <- metropolis.run(log_prob, x0, iter, draw.prop)
+  run <- hmc.run(log_prob, x0, iter)
   run <- postproc(run)
   return(run)
 
 }
 
 
-#' Run one metropolis chain
+#' Run one HMC chain
 #'
 #' @param log_prob a function that takes input \code{x} and returns
 #' a value that is proportional to the log probability density at \code{x}
 #' @param x0 initial value
 #' @param iter number of iterations
-#' @param draw.prop a function that takes input \code{x} and
-#' draws a proposal \code{x_prop}
 #' @return a list
-metropolis.run <- function(log_prob, x0, iter, draw.prop){
+hmc.run <- function(log_prob, x0, iter){
   d        <- length(x0)
   PATH     <- matrix(0, iter, d)
   PATH[1,] <- x0
@@ -49,10 +42,7 @@ metropolis.run <- function(log_prob, x0, iter, draw.prop){
   for(i in 2:iter){
     x        <- PATH[i-1,]
     lp       <- LP[i-1]
-    x_prop   <- draw.prop(x) # draw proposal
-    PROP[i,] <- x_prop
-    lp_prop  <- log_prob(x_prop) # compute log prob of proposal
-    ratio    <- exp(lp_prop - lp) # compute acceptance ratio
+    stop("HMC not implemented!")
     if(R[i]  < ratio){
       PATH[i,]  <- x_prop
       ACCEPT[i] <- 1
