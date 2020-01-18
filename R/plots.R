@@ -7,10 +7,11 @@
 #' @param color_low color scale lowest value color
 #' @param color_high color scale highest value color
 #' @param title plot title
+#' @param font_size title font size
 #' @return a ggplot object
-plt.surface <- function(fun = donut, grid_size = 3, N_grid = 200,
-                        color_low = "gray15", color_high = "gray95",
-                        title = NULL){
+plt.surface <- function(fun = donut, grid_size = 3, N_grid = 100,
+                        color_low = "gray95", color_high = "gray50",
+                        title = NULL, font_size = 10){
   if(length(grid_size)==1){
     grid <- c(-grid_size,-grid_size,grid_size,grid_size)
   }else{
@@ -41,8 +42,8 @@ plt.surface <- function(fun = donut, grid_size = 3, N_grid = 200,
   colnames(df) <- c("x", "y", "prob")
   df$prob <- exp(df$prob)
   df$prob <- df$prob/sum(df$prob)
-  p <- ggplot2::ggplot(df, ggplot2::aes(x=x,y=y)) +
-    ggplot2::geom_raster(ggplot2::aes(fill=prob)) +
+  p <- ggplot2::ggplot(df, ggplot2::aes_string(x="x",y="y",fill="prob")) +
+    ggplot2::geom_raster() +
     ggplot2::theme_minimal() +
     scale_fill_gradient(low = color_low, high = color_high) +
     ggplot2::xlab('theta1') +
@@ -51,7 +52,11 @@ plt.surface <- function(fun = donut, grid_size = 3, N_grid = 200,
     p <- p + ggplot2::ggtitle(title)
   }
   p <- p + ggplot2::theme(panel.grid.major = ggplot2::element_blank(),
-                          panel.grid.minor = ggplot2::element_blank())
+                          panel.grid.minor = ggplot2::element_blank(),
+                          axis.title = ggplot2::element_blank(),
+                          axis.text = ggplot2::element_blank(),
+                          plot.title = ggplot2::element_text(size = font_size),
+                          legend.position = "none")
   return(p)
 }
 
@@ -71,10 +76,10 @@ add.path <- function(p, X, color = "firebrick3", alpha = 1.0, lines = TRUE){
   df_path <- data.frame(x,y)
   if(lines){
     p <- p + ggplot2::geom_path(data = df_path, mapping = ggplot2::aes(x = x, y = y),
-                                color = color, alpha = alpha)
+                                inherit.aes = FALSE, color = color, alpha = alpha)
   }else{
     p <- p + ggplot2::geom_point(data = df_path, mapping = ggplot2::aes(x = x, y = y),
-                                color = color, alpha = alpha)
+                                inherit.aes = FALSE, color = color, alpha = alpha)
   }
   return(p)
 }

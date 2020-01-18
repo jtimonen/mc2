@@ -1,16 +1,22 @@
 ---
 title: "MCMC demo"
-output: rmarkdown::html_vignette
+author: "Juho Timonen"
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+#  pdf_document:
+#    toc: true     
 vignette: >
-  %\VignetteIndexEntry{MCMC tutorial}
+  %\VignetteIndexEntry{MCMC demo}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+collapse = TRUE,
+comment = "#>"
 )
 ```
 
@@ -18,6 +24,7 @@ knitr::opts_chunk$set(
 ```{r setup}
 require(mc2)
 require(ggplot2)
+require(ggpubr)
 ```
 
 We begin by defining a target log posterior density and a grid for plotting.
@@ -27,18 +34,19 @@ log_prob(c(2,3))
 ```
 
 First we sample using the Metropolis algoritm.
-```{r metropolis, fig.width = 6, fig.height = 6}
-# Sample
-iter  <- 1000
-x0    <- stats::rnorm(2)
-sig   <- 0.1
-chain <- metropolis(log_prob, x0, iter, sig)
-```
+```{r metropolis, fig.width = 7.2, fig.height = 2.8}
+SIG   <- c(0.1,0.25,0.5)
+ITER  <- rep(1000, 3)
+PLT   <- list()
+for(j in 1:3){
+  x0     <- stats::rnorm(2)
+  sig    <- SIG[j]
+  iter   <- ITER[j]
+  chain  <- metropolis(log_prob, x0, iter, sig)
+  title  <- paste0('Metropolis, sig = ', sig, ', iter = ', iter)
+  p      <- plt.surface(donut, title = title)
+  PLT[[j]] <- add.path(p, chain$x, lines = FALSE, alpha = 0.3)
+}
 
-```{r plot, fig.width = 7.2, fig.height = 6}
-# Plot
-title <- paste0('Metropolis, sig = ', sig, ', iter = ', iter)
-p <- plt.surface(donut, title = title)
-p <- add.path(p, chain$x, lines = TRUE)
-p
+ggarrange(PLT[[1]], PLT[[2]], PLT[[3]], nrow = 1, ncol = 3)
 ```

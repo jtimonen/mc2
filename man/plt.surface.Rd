@@ -4,8 +4,15 @@
 \alias{plt.surface}
 \title{Create contour plot of a density}
 \usage{
-plt.surface(fun = donut, grid_size = 3, N_grid = 200,
-  color_low = "gray15", color_high = "gray95", title = NULL)
+plt.surface(
+  fun = donut,
+  grid_size = 3,
+  N_grid = 100,
+  color_low = "gray95",
+  color_high = "gray50",
+  title = NULL,
+  font_size = 10
+)
 }
 \arguments{
 \item{fun}{function that evaluates (unnormalized) log density}
@@ -17,6 +24,8 @@ plt.surface(fun = donut, grid_size = 3, N_grid = 200,
 \item{color_high}{color scale highest value color}
 
 \item{title}{plot title}
+
+\item{font_size}{title font size}
 
 \item{grid}{grid bouds}
 }
